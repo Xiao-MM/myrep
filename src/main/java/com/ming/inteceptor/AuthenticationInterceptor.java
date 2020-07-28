@@ -9,6 +9,7 @@ import com.ming.annotation.PassToken;
 import com.ming.annotation.UserLoginToken;
 import com.ming.pojo.User;
 import com.ming.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
@@ -19,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Method;
 
+@Slf4j
 @Component
 public class AuthenticationInterceptor implements HandlerInterceptor {
 
@@ -27,8 +29,16 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object object) throws Exception {
-        String token = request.getHeader("token");
+        //拿到当前请求路径
+        log.info(request.getRequestURI());
+        //拿到当前用户，从token中获取
+        //获取用户角色
+        //判断该角色是否有该权限
 
+
+        //log.info(request.getHttpServletMapping().toString());
+        //log.info(request.getPathInfo());
+        String token = request.getHeader("token");
         if (!(object instanceof HandlerMethod)){
             return true;
         }

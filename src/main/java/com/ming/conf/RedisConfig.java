@@ -35,7 +35,7 @@ public class RedisConfig {
 //        objectMapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
 //        objectMapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
 //        jackson2JsonRedisSerializer.setObjectMapper(objectMapper);
-        GenericJackson2JsonRedisSerializer genericJackson2JsonRedisSerializer = new GenericJackson2JsonRedisSerializer();
+//        GenericJackson2JsonRedisSerializer genericJackson2JsonRedisSerializer = new GenericJackson2JsonRedisSerializer();
         /**
          *  StringRedisSerializer适合转String，转对象类型会报ClassCastException异常
          */

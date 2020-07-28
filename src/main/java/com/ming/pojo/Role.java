@@ -18,5 +18,5 @@ public class Role {
     @KeySql(dialect = IdentityDialect.MYSQL)
     private Integer id;
     private String name;
-    private String desc;
+    private String description;
 }

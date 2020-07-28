@@ -4,6 +4,7 @@ import com.ming.annotation.UserLoginToken;
 import com.ming.pojo.User;
 import com.ming.service.UserService;
 import com.ming.utils.JWTUtil;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,6 +19,7 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @ApiOperation("用户登录")
     @GetMapping("/login/{username}/{password}")
     public Map<String,Object> login(@PathVariable String username, @PathVariable String password){
 
@@ -42,17 +44,22 @@ public class UserController {
         return map;
     }
 
+    @ApiOperation("查看用户")
     @GetMapping("/find/{id}")
     public User findUser(@PathVariable Integer id){
         return userService.findUserById(id);
     }
 
+    @ApiOperation("修改用户信息")
     @PostMapping("/update")
     public String updateUser(@RequestBody User user){
         userService.updateUser(user);
         return "更改用户信息成功！";
     }
+
+
     //加token才能访问
+    @ApiOperation("token校验")
     @GetMapping("/getMessage")
     @UserLoginToken
     public String getMessage(){

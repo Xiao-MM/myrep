@@ -15,4 +15,6 @@ public interface ResourceService {
     Resource findResource(Integer resourceId);
 
     List<Resource> findResources();
+
+    List<Resource> findResourcesByRoleId(Integer roleId);
 }
