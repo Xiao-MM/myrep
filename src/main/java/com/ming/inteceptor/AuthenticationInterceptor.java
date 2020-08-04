@@ -1,14 +1,13 @@
 package com.ming.inteceptor;
 
 import com.auth0.jwt.JWT;
-import com.auth0.jwt.JWTVerifier;
-import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTDecodeException;
-import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.ming.annotation.PassToken;
 import com.ming.annotation.UserLoginToken;
+import com.ming.exception.ExceptionManager;
 import com.ming.pojo.User;
 import com.ming.service.UserService;
+import com.ming.utils.JWTUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -20,12 +19,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Method;
 
+/**
+ * 登录拦截器
+ */
 @Slf4j
 @Component
 public class AuthenticationInterceptor implements HandlerInterceptor {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private ExceptionManager exceptionManager;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object object) throws Exception {
@@ -34,8 +38,6 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         //拿到当前用户，从token中获取
         //获取用户角色
         //判断该角色是否有该权限
-
-
         //log.info(request.getHttpServletMapping().toString());
         //log.info(request.getPathInfo());
         String token = request.getHeader("token");
@@ -56,30 +58,25 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
             UserLoginToken userLoginToken = method.getAnnotation(UserLoginToken.class);
             if (userLoginToken.required()){
                 if (token == null){
-                    throw new RuntimeException("无token，请重新登录");
+                    throw exceptionManager.create("EC01004");
                 }
-
                 Integer id;
                 try {
                     id = Integer.parseInt(JWT.decode(token).getAudience().get(0));
                     System.out.println(id);
                 }catch (JWTDecodeException e){
-                    throw new RuntimeException("token解析失败!");
+                    throw exceptionManager.create("EC01003");
                 }
                 User user = userService.findUserById(id);
-                System.out.println(user);
                 if (user == null){
-                    throw new RuntimeException("该用户不存在！");
+                    throw exceptionManager.create("EC01000");
                 }
-                JWTVerifier verifier = JWT.require(Algorithm.HMAC256(user.getPassword())).build();
-                try {
-                    verifier.verify(token);
-                }catch (JWTVerificationException e){
-                    throw new RuntimeException("token不符合要求！");
+                boolean verify = JWTUtil.verify(token, user);
+                if (!verify){
+                    throw exceptionManager.create("EC01002");
                 }
-               return true;
+                return true;
             }
-
         }
         return true;
     }
