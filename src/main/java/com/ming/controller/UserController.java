@@ -1,9 +1,11 @@
 package com.ming.controller;
 
 import com.ming.annotation.UserLoginToken;
+import com.ming.exception.ExceptionManager;
 import com.ming.pojo.User;
 import com.ming.service.UserService;
 import com.ming.utils.JWTUtil;
+import com.ming.vo.UserVO;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -18,30 +20,26 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private ExceptionManager exceptionManager;
 
     @ApiOperation("用户登录")
-    @GetMapping("/login/{username}/{password}")
-    public Map<String,Object> login(@PathVariable String username, @PathVariable String password){
+    @PostMapping("/login")
+    public UserVO login(String username, String password){
 
         User user = userService.findUserByUsername(username);
-        Map<String,Object> map = new HashMap<>();
-
         if (user == null){
-            map.put("msg","用户不存在");
-            return map;
+            throw exceptionManager.create("EC01000");
         }
-
         if (!(user.getPassword().equals(password))){
-            map.put("msg","密码错误");
-            return map;
+            throw exceptionManager.create("EC01001");
         }
-
         String token = JWTUtil.getToken(user);
-        System.out.println(token);
-        map.put("token",token);
-        map.put("user",user);
-        map.put("msg","登陆成功!");
-        return map;
+        UserVO userVO = new UserVO();
+        userVO.setUser(user);
+        userVO.setToken(token);
+
+        return userVO;
     }
 
     @ApiOperation("查看用户")
