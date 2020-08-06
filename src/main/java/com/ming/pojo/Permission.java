@@ -17,6 +17,7 @@ public class Permission {
     @Id
     @KeySql(dialect = IdentityDialect.MYSQL)
     private Integer id;
-    private String title;
-    private String uri;
+    private String name;
+    private String url;
+    private String description;
 }

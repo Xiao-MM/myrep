@@ -9,8 +9,10 @@ import java.util.List;
 public interface PermissionMapper extends Mapper<Permission> {
     @Select({"<script>" +
             "select * from permission where " +
-            "id in <foreach item = 'permissionId' collection = 'permissionIds' open='(' separator=',' close=')'>" +
-            "#{permissionId}</foreach>" +
+            "id in " +
+            "<foreach item = 'permissionId' collection = 'permissionIds' open='(' separator=',' close=')'>" +
+            "   #{permissionId}" +
+            "</foreach>" +
             "</script>"})
-    List<Permission> findPermissionsInPermissionIds(List<Integer> permissionIds);
+    List<Permission> queryPermissionsInPermissionIds(List<Integer> permissionIds);
 }

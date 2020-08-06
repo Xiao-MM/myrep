@@ -34,30 +34,30 @@ public class TestRedis {
         System.out.println(redisUtil.get("bbb").toString());
     }
 
-    @Test
-    void testJackson2JsonRedisSerializer(){
-//        redisUtil.set("ccc","ccc");
-//        System.out.println(redisUtil.get("ccc").toString());
-        User user = new User(1,"zs","123456");
-//        redisUtil.set("user1",user);
-//        System.out.println(redisUtil.get("user1").toString());
-        Map<String,Object> map = new HashMap<>();
+//    @Test
+//    void testJackson2JsonRedisSerializer(){
+////        redisUtil.set("ccc","ccc");
+////        System.out.println(redisUtil.get("ccc").toString());
+//        User user = new User(1,"zs","123456");
+////        redisUtil.set("user1",user);
+////        System.out.println(redisUtil.get("user1").toString());
+//        Map<String,Object> map = new HashMap<>();
+//
+//        map.put("id",user.getId());
+//        map.put("username",user.getUsername());
+//        map.put("password",user.getPassword());
+//        redisUtil.hashMoreSet("user2",map);
+//        System.out.println(redisUtil.hashMoreGet("user2"));
+//    }
 
-        map.put("id",user.getId());
-        map.put("username",user.getUsername());
-        map.put("password",user.getPassword());
-        redisUtil.hashMoreSet("user2",map);
-        System.out.println(redisUtil.hashMoreGet("user2"));
-    }
-
-    @Test
-    void testStringRedisSerializer(){
-//        redisUtil.set("ddd","ddd");
-//        System.out.println(redisUtil.get("ddd").toString());
-        User user = new User(1,"zs","123456");
-        redisUtil.set("user3",user);
-        System.out.println(redisUtil.get("user3").toString());
-    }
+//    @Test
+//    void testStringRedisSerializer(){
+////        redisUtil.set("ddd","ddd");
+////        System.out.println(redisUtil.get("ddd").toString());
+//        User user = new User(1,"zs","123456");
+//        redisUtil.set("user3",user);
+//        System.out.println(redisUtil.get("user3").toString());
+//    }
     @Test
     void testList(){
         //redisUtil.lSet("lll","a1");

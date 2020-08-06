@@ -1,7 +1,10 @@
 package com.ming.service.impl;
 
+import com.ming.dao.RoleMapper;
 import com.ming.dao.UserMapper;
+import com.ming.pojo.Role;
 import com.ming.pojo.User;
+import com.ming.service.RoleService;
 import com.ming.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -16,6 +19,8 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private RoleService roleService;
 
     @Override
     public User findUserByUsername(String username) {
@@ -32,14 +37,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Cacheable(value = "user",key = "#id")
+    //@Cacheable(value = "user",key = "#id")
     public User findUserById(Integer id) {
         User user = userMapper.selectByPrimaryKey(id);
+        List<Role> roles = roleService.findRoles(id);
+        user.setRoles(roles);
         return user;
     }
 
     @Override
-    @CacheEvict(value = "user",key = "#user.getId()")
+    //@CacheEvict(value = "user",key = "#user.getId()")
     public void updateUser(User user) {
         System.out.println(user);
         userMapper.updateByPrimaryKeySelective(user);

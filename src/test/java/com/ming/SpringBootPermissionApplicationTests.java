@@ -17,11 +17,11 @@ class SpringBootPermissionApplicationTests {
     void contextLoads() {
     }
 
-    @Test
-    void testGetToken1(){
-        String token = JWTUtil.generateToken(new User(1, "zs", "123456"));
-        System.out.println(token);
-    }
+//    @Test
+//    void testGetToken1(){
+//        String token = JWTUtil.generateToken(new User(1, "zs", "123456"));
+//        System.out.println(token);
+//    }
 
     /**
      * 1. 为什么开启事务?
@@ -45,14 +45,14 @@ class SpringBootPermissionApplicationTests {
         //第二次查询，从二级缓存中获取
         userMapper.selectByPrimaryKey(1);
     }
-    @Test
-    void testSecondCacheLose(){
-        userMapper.selectByPrimaryKey(1);
-        userMapper.selectByPrimaryKey(1);
-        User user = new User(1,"ls","123333");
-        userMapper.updateByPrimaryKeySelective(user);
-        userMapper.selectByPrimaryKey(1);
-    }
+//    @Test
+//    void testSecondCacheLose(){
+//        userMapper.selectByPrimaryKey(1);
+//        userMapper.selectByPrimaryKey(1);
+//        User user = new User(1,"ls","123333");
+//        userMapper.updateByPrimaryKeySelective(user);
+//        userMapper.selectByPrimaryKey(1);
+//    }
 
     @Test
     void testGetToken2(){

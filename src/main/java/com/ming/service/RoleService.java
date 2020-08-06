@@ -15,4 +15,11 @@ public interface RoleService {
     Role findRole(Integer roleId);
 
     List<Role> findRoles();
+
+    /**
+     * 查找用户包含的角色
+     * @param userId
+     * @return
+     */
+    List<Role> findRoles(Integer userId);
 }

@@ -50,6 +50,6 @@ public class RolePermissionServiceImpl implements RolePermissionService {
      */
     @Override
     public List<Integer> findPermissionIdsByRoleId(Integer roleId) {
-        return rolePermissionMapper.findPermissionIdsByRoleId(roleId);
+        return rolePermissionMapper.queryPermissionIdsByRoleId(roleId);
     }
 }

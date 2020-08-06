@@ -6,6 +6,7 @@ import com.ming.pojo.Permission;
 import com.ming.service.PermissionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import tk.mybatis.mapper.entity.Example;
 
 import java.util.List;
 
@@ -45,10 +46,9 @@ public class PermissionServiceImpl implements PermissionService {
     @Override
     public List<Permission> findPermissionsByRoleId(Integer roleId) {
         //查找出该角色拥有的所有权限的id
-        List<Integer> permissionIds = rolePermissionMapper.findPermissionIdsByRoleId(roleId);
+        List<Integer> permissionIds = rolePermissionMapper.queryPermissionIdsByRoleId(roleId);
         //根据这些id查询出所有的权限信息
-
-        return null;
+        return permissionMapper.queryPermissionsInPermissionIds(permissionIds);
     }
 
 

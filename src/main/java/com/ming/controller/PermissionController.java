@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/resource")
+@RequestMapping("/permission")
 public class PermissionController {
     @Autowired
     private PermissionService permissionService;

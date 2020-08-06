@@ -8,6 +8,9 @@ import tk.mybatis.mapper.annotation.KeySql;
 import tk.mybatis.mapper.code.IdentityDialect;
 
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.Transient;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -19,4 +22,7 @@ public class Role {
     private Integer id;
     private String name;
     private String description;
+    //@ManyToMany
+    @Transient
+    private List<Permission> permissions;
 }
