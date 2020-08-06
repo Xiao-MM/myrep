@@ -11,6 +11,10 @@ public class ResultBody {
     private String msg;
     private Object data;
 
+    public ResultBody(String code,String msg){
+        this.code = code;
+        this.msg = msg;
+    }
     public ResultBody(String code , String msg , Object data) {
         this.code = code;
         this.msg =msg;

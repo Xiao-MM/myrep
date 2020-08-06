@@ -19,7 +19,7 @@ class SpringBootPermissionApplicationTests {
 
     @Test
     void testGetToken1(){
-        String token = JWTUtil.getToken(new User(1, "zs", "123456"));
+        String token = JWTUtil.generateToken(new User(1, "zs", "123456"));
         System.out.println(token);
     }
 

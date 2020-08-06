@@ -3,11 +3,21 @@ package com.ming.utils;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.interfaces.Claim;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.ming.pojo.User;
+import lombok.extern.slf4j.Slf4j;
 
+import java.util.Date;
+
+@Slf4j
 public class JWTUtil {
-    public static final Long EXPIRE_TIME = 24*60*60*1000l;
+    /**
+     * 设置过期时间30天
+     */
+    public static final Long EXPIRE_TIME = 30*24*60*60*1000l;
 
 
     /**
@@ -15,57 +25,40 @@ public class JWTUtil {
      * @param user
      * @return
      */
-    public static String getToken(User user){
+    public static String generateToken(User user){
         //withAudience()存入需要保存在token的信息
         //Algorithm.HMAC256():使用HS256生成token,密钥则是用户的密码，唯一密钥的话可以保存在服务端。
         Algorithm algorithm = Algorithm.HMAC256(user.getPassword());
         return JWT.create()
-                .withAudience(user.getId().toString())
-                .withClaim("username",user.getUsername())
+                .withClaim("uid",user.getId())
+                //设置过期时间为30天以后
+                .withExpiresAt(new Date(System.currentTimeMillis()+EXPIRE_TIME))
                 .sign(algorithm);
     }
 
-//    /**
-//     *
-//     * @param secret
-//     * @return
-//     */
-//    public static String getToken(Integer uid,String secret){
-//        //header
-//        Map<String,Object> map = new HashMap<>();
-//        map.put("alg","HS256");
-//        map.put("typ","JWT");
-//
-//        long currentTimeMillis = System.currentTimeMillis();
-//        Date expireTime = new Date(currentTimeMillis+EXPIRE_TIME);
-//
-//
-//        String token = JWT.create()
-//                .withHeader(map)
-//                .withClaim("uid", uid)
-//                .withExpiresAt(expireTime)//设置过期时间
-//                .withIssuedAt(new Date())//设置签发时间
-//                //对传递的字段进行加密操作，私匙
-//                .sign(Algorithm.HMAC256(secret));
-//
-//        return token;
-//    }
+    /**
+     * 获取jwt中的用户id
+     * @param token
+     * @return
+     */
+    public static Integer getUid(String token){
+       DecodedJWT jwt = JWT.decode(token);
+       Claim uid = jwt.getClaim("uid");
+       return uid.asInt();
 
-//    public static boolean isVerify(String token,Integer uid,String secret){
-//        Algorithm algorithm = Algorithm.HMAC256(secret);
-//        JWTVerifier verifier = JWT.require(algorithm).withClaim("name", uid).build();
-//        try {
-//            verifier.verify(token);
-//        }catch (JWTVerificationException e){
-//            return false;
-//        }
-//        return true;
-//    }
 
+    }
+
+    /**
+     * 校验token
+     * @param token
+     * @param user
+     * @return
+     */
     public static boolean verify(String token,User user){
         Algorithm algorithm = Algorithm.HMAC256(user.getPassword());
         JWTVerifier verifier = JWT.require(algorithm)
-                .withClaim("username",user.getUsername())
+                .withClaim("uid",user.getId())
                 .build();
         try {
             verifier.verify(token);

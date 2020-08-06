@@ -1,23 +1,22 @@
 package com.ming.inteceptor;
 
-import com.auth0.jwt.JWT;
 import com.auth0.jwt.exceptions.JWTDecodeException;
-import com.ming.annotation.PassToken;
-import com.ming.annotation.UserLoginToken;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ming.ResultBody;
 import com.ming.exception.ExceptionManager;
 import com.ming.pojo.User;
 import com.ming.service.UserService;
 import com.ming.utils.JWTUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
-import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
-import org.springframework.web.servlet.ModelAndView;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.lang.reflect.Method;
+import java.io.IOException;
 
 /**
  * 登录拦截器
@@ -27,67 +26,49 @@ import java.lang.reflect.Method;
 public class AuthenticationInterceptor implements HandlerInterceptor {
 
     @Autowired
-    private UserService userService;
+    UserService userService;
     @Autowired
-    private ExceptionManager exceptionManager;
+    ExceptionManager exceptionManager;
+    @Resource
+    Environment environment;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object object) throws Exception {
         //拿到当前请求路径
-        log.info(request.getRequestURI());
-        //拿到当前用户，从token中获取
-        //获取用户角色
-        //判断该角色是否有该权限
-        //log.info(request.getHttpServletMapping().toString());
-        //log.info(request.getPathInfo());
-        String token = request.getHeader("token");
-        if (!(object instanceof HandlerMethod)){
-            return true;
-        }
-        HandlerMethod handlerMethod = (HandlerMethod)object;
-        Method method = handlerMethod.getMethod();
-        //检查@PassToken注解，有@PassToken注解的方法将直接跳过认证
-        if (method.isAnnotationPresent(PassToken.class)){
-            PassToken passToken = method.getAnnotation(PassToken.class);
-            if (passToken.required()){
-                return true;
-            }
-        }
-        //检查有没有用户权限的注解
-        if (method.isAnnotationPresent(UserLoginToken.class)){
-            UserLoginToken userLoginToken = method.getAnnotation(UserLoginToken.class);
-            if (userLoginToken.required()){
-                if (token == null){
-                    throw exceptionManager.create("EC01004");
-                }
-                Integer id;
-                try {
-                    id = Integer.parseInt(JWT.decode(token).getAudience().get(0));
-                    System.out.println(id);
-                }catch (JWTDecodeException e){
-                    throw exceptionManager.create("EC01003");
-                }
-                User user = userService.findUserById(id);
-                if (user == null){
-                    throw exceptionManager.create("EC01000");
-                }
-                boolean verify = JWTUtil.verify(token, user);
-                if (!verify){
-                    throw exceptionManager.create("EC01002");
-                }
-                return true;
-            }
+        log.info("AuthenticationInterceptor-->"+request.getRequestURI());
+        if(!verifyLogin(request,response)){
+            return false;
         }
         return true;
     }
 
-    @Override
-    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-
+    private Boolean verifyLogin(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String token = request.getHeader("token");
+        if (token==null){
+            setErrorResponse("EC01004",response);
+            return false;
+        }
+        Integer uid;
+        try {
+            uid = JWTUtil.getUid(token);
+        }catch (JWTDecodeException e){
+            setErrorResponse("EC01003",response);
+            return false;
+        }
+        if (uid!=null){
+            User user = userService.findUserById(uid);
+            if (user==null||!(JWTUtil.verify(token, user))){
+                setErrorResponse("EC01005",response);
+                return false;
+            }
+            request.getSession().setAttribute("uid",uid);
+        }
+        return true;
+    }
+    private void  setErrorResponse (String code , HttpServletResponse response ) throws IOException {
+        ResultBody resultBody = new ResultBody(code,environment.getProperty(code)) ;
+        response.setContentType("application/json; charset=utf-8");
+        response.getWriter().println( new ObjectMapper().writeValueAsString(resultBody));
     }
 
-    @Override
-    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
-
-    }
 }
