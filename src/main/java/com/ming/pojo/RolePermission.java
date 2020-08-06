@@ -13,10 +13,10 @@ import javax.persistence.Id;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class RoleResource {
+public class RolePermission {
     @Id
     @KeySql(dialect = IdentityDialect.MYSQL)
     private Integer id;
     private Integer roleId;
-    private Integer resourceId;
+    private Integer permissionId;
 }

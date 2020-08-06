@@ -1,6 +1,6 @@
 package com.ming.controller;
 
-import com.ming.service.RoleResourceService;
+import com.ming.service.RolePermissionService;
 import com.ming.service.UserRoleService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,12 +17,12 @@ public class GrantController {
     private UserRoleService userRoleService;
 
     @Autowired
-    private RoleResourceService roleResourceService;
+    private RolePermissionService rolePermissionService;
 
     @ApiOperation("角色分配权限")
     @GetMapping("/resource/add/{roleId}/{resourceId}")
     public String addResource(@PathVariable Integer roleId, @PathVariable Integer resourceId){
-        roleResourceService.addResource(roleId,resourceId);
+        rolePermissionService.addPermission(roleId,resourceId);
         return "角色分配权限成功";
     }
     @ApiOperation("用户分配角色")

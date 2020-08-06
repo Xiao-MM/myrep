@@ -13,7 +13,7 @@ import javax.persistence.Id;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class Resource {
+public class Permission {
     @Id
     @KeySql(dialect = IdentityDialect.MYSQL)
     private Integer id;
