@@ -93,6 +93,11 @@
             <artifactId>jakarta.validation-api</artifactId>
             <version>2.0.2</version>
         </dependency>
+        <!--没有这个shiro的认证操作就不会执行-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

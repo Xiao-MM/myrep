@@ -48,7 +48,9 @@ public class PermissionServiceImpl implements PermissionService {
         //查找出该角色拥有的所有权限的id
         List<Integer> permissionIds = rolePermissionMapper.queryPermissionIdsByRoleId(roleId);
         //根据这些id查询出所有的权限信息
-        return permissionMapper.queryPermissionsInPermissionIds(permissionIds);
+        Example example = new Example(Permission.class);
+        example.createCriteria().andIn("id",permissionIds);
+        return permissionMapper.selectByExample(example);
     }
 
 

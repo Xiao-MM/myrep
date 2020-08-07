@@ -76,6 +76,7 @@ public class ShiroConfig {
         for (Permission permission:allPermissions){
             filterMap.put(permission.getUrl(),"perms["+ permission.getName()+"]");
         }
+        //公开swagger-ui
         filterMap.put("/swagger-resources/**","anon");
         filterMap.put("/webjars/**","anon");
         filterMap.put("/v2/**","anon");
@@ -85,8 +86,6 @@ public class ShiroConfig {
         filterMap.put("/open/api/sayHello","anon");//所有人都可以访问的接口
         filterMap.put("/user/logout","logout");//配置登出页，shiro已帮我们实现跳转
         filterMap.put("/**","authc");//所有资源都需要验证
-        //.excludePathPatterns("/swagger-resources/**", "/webjars/**", "/v2/**", "/swagger-ui.html/**");
-
 
         return filterMap;
     }

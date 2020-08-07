@@ -9,6 +9,7 @@ public class ShiroMessageController {
      * 成功链接
      * @return
      */
+
     @GetMapping("/success")
     public String success(){
         return "success";

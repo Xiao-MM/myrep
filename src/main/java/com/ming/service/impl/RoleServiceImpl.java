@@ -1,11 +1,9 @@
 package com.ming.service.impl;
 
-import com.ming.dao.PermissionMapper;
 import com.ming.dao.RoleMapper;
 import com.ming.dao.UserRoleMapper;
 import com.ming.pojo.Permission;
 import com.ming.pojo.Role;
-import com.ming.pojo.UserRole;
 import com.ming.service.PermissionService;
 import com.ming.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +11,6 @@ import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 public class RoleServiceImpl implements RoleService {
@@ -64,7 +60,7 @@ public class RoleServiceImpl implements RoleService {
     public List<Role> findRoles(Integer userId) {
         List<Integer> roleIds = userRoleMapper.queryRoleIdsByUserId(userId);
         Example example1 =new Example(Role.class);
-        example1.createCriteria().andIn("roleId",roleIds);
+        example1.createCriteria().andIn("id",roleIds);
         return roleMapper.selectByExample(example1);
     }
 }
