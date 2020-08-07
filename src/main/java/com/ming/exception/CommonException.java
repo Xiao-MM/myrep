@@ -1,10 +1,13 @@
 package com.ming.exception;
+
+import lombok.Getter;
+
+@Getter
 public class CommonException extends  RuntimeException  {
     private boolean track ;
     private  String code ;
     private  String msg;
     private Object data ;
-
 
     public CommonException(String code, String msg) {
         super(msg);
@@ -24,20 +27,5 @@ public class CommonException extends  RuntimeException  {
         this.track =true ;
         this.code = code;
         this.msg = msg;
-    }
-
-    public String getCode(){
-        return this.code;
-    }
-
-    public String getMsg(){
-        return this.msg;
-    }
-    public Object getData (){
-        return this.data ;
-    }
-
-    public boolean getTrack() {
-        return  this.track;
     }
 }

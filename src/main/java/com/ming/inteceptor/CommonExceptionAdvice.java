@@ -26,7 +26,7 @@ public class CommonExceptionAdvice {
     // 业务异常
     @ExceptionHandler(CommonException.class)
     public ResultBody baseExceptionHandler(CommonException e){
-        if (e.getTrack()) {
+        if (e.isTrack()) {
             log.error("业务异常 :" + e.getMsg(),e);
         }else {
             log.error("业务异常" + e.getMsg());
