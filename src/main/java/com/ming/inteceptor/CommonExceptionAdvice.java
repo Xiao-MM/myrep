@@ -5,6 +5,7 @@ import com.ming.ResultBody;
 import com.ming.exception.CommonException;
 import com.ming.exception.ExceptionManager;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.authz.AuthorizationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.ObjectError;
@@ -16,7 +17,7 @@ import javax.validation.ConstraintViolationException;
 import java.util.List;
 
 
-@RestControllerAdvice(basePackages = "com.ming.controller")
+@RestControllerAdvice(basePackages = "com.ming")
 @Slf4j
 public class CommonExceptionAdvice {
     @Autowired
@@ -57,6 +58,14 @@ public class CommonExceptionAdvice {
     @ExceptionHandler(ConstraintViolationException.class)
     public ResultBody MethodArgumentNotValidException(ConstraintViolationException e ) {
         ResultBody  resultBody = ResultBody.error(exceptionManager.create("EC00002"));
+        resultBody.setData(e.getMessage());
+        return resultBody ;
+    }
+    //权限认证 异常
+    @ExceptionHandler(AuthorizationException.class)
+    public ResultBody MethodUnauthenticatedException(AuthorizationException e) {
+        log.error("权限认证异常",e);
+        ResultBody  resultBody = ResultBody.error(exceptionManager.create("EC00004"));
         resultBody.setData(e.getMessage());
         return resultBody ;
     }
