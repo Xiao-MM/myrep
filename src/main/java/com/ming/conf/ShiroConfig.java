@@ -5,7 +5,6 @@ import com.ming.service.PermissionService;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -73,9 +72,8 @@ public class ShiroConfig {
         Map<String,String> filterMap = new LinkedHashMap<>();
         //注册数据库的所有权限，及其对应的url
         List<Permission> allPermissions = permissionService.findPermissions();
-        for (Permission permission:allPermissions){
-            filterMap.put(permission.getUrl(),"perms["+ permission.getName()+"]");
-        }
+        allPermissions.forEach(permission ->  filterMap.put(permission.getUrl(),"perms["+ permission.getName()+"]"));
+
         //公开swagger-ui
         filterMap.put("/swagger-resources/**","anon");
         filterMap.put("/webjars/**","anon");
@@ -84,7 +82,7 @@ public class ShiroConfig {
 
         filterMap.put("/user/login","anon"); //公开登录接口
         filterMap.put("/open/api/sayHello","anon");//所有人都可以访问的接口
-        filterMap.put("/user/logout","logout");//配置登出页，shiro已帮我们实现跳转
+        filterMap.put("/user/logout","user");//不用anon
         filterMap.put("/**","authc");//所有资源都需要验证
 
         return filterMap;

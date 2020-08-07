@@ -24,7 +24,7 @@ public class CommonExceptionAdvice {
     private ExceptionManager exceptionManager ;
 
     // 业务异常
-    @ExceptionHandler(value = CommonException.class)
+    @ExceptionHandler(CommonException.class)
     public ResultBody baseExceptionHandler(CommonException e){
         if (e.getTrack()) {
             log.error("业务异常 :" + e.getMsg(),e);
@@ -39,7 +39,7 @@ public class CommonExceptionAdvice {
     public ResultBody MethodArgumentNotValidException(MethodArgumentNotValidException e ) {
         List<ObjectError> errors =e.getBindingResult().getAllErrors();
         StringBuffer errorMsg=new StringBuffer();
-        errors.stream().forEach(x -> errorMsg.append(x.getDefaultMessage()).append(";"));
+        errors.forEach(x -> errorMsg.append(x.getDefaultMessage()).append(";"));
         ResultBody  resultBody = ResultBody.error(exceptionManager.create("EC00002"));
         resultBody.setData(errorMsg);
         return resultBody ;
@@ -49,7 +49,7 @@ public class CommonExceptionAdvice {
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResultBody MethodArgumentNotValidException(HttpMessageNotReadableException e ) {
         log.error("参数格式异常",e);
-        ResultBody  resultBody = ResultBody.error(exceptionManager.create("EC00003"));
+        ResultBody resultBody = ResultBody.error(exceptionManager.create("EC00003"));
         resultBody.setData(e.getMessage());
         return resultBody ;
     }
@@ -57,7 +57,7 @@ public class CommonExceptionAdvice {
     // 参数null 异常
     @ExceptionHandler(ConstraintViolationException.class)
     public ResultBody MethodArgumentNotValidException(ConstraintViolationException e ) {
-        ResultBody  resultBody = ResultBody.error(exceptionManager.create("EC00002"));
+        ResultBody resultBody = ResultBody.error(exceptionManager.create("EC00002"));
         resultBody.setData(e.getMessage());
         return resultBody ;
     }
@@ -65,13 +65,13 @@ public class CommonExceptionAdvice {
     @ExceptionHandler(AuthorizationException.class)
     public ResultBody MethodUnauthenticatedException(AuthorizationException e) {
         log.error("权限认证异常",e);
-        ResultBody  resultBody = ResultBody.error(exceptionManager.create("EC00004"));
+        ResultBody resultBody = ResultBody.error(exceptionManager.create("EC00004"));
         resultBody.setData(e.getMessage());
         return resultBody ;
     }
 
     // 系统内部异常
-    @ExceptionHandler(value = Exception.class)
+    @ExceptionHandler(Exception.class)
     public ResultBody exceptionHandler(Exception e){
         log.error("系统内部异常",e);
         return ResultBody.error(exceptionManager.create("EC00001"));

@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * 登录拦截器
+ * 登录拦截器，处理JWT登录方式的请求
  */
 @Slf4j
 @Component
