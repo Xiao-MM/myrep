@@ -1,6 +1,5 @@
 package com.ming.service.impl;
 
-import com.ming.dao.RoleMapper;
 import com.ming.dao.UserMapper;
 import com.ming.pojo.Role;
 import com.ming.pojo.User;
@@ -12,12 +11,13 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
 
-    @Autowired
+    @Resource
     private UserMapper userMapper;
     @Autowired
     private RoleService roleService;
@@ -37,7 +37,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    //@Cacheable(value = "user",key = "#id")
+    @Cacheable(value = "user",key = "#id")
     public User findUserById(Integer id) {
         User user = userMapper.selectByPrimaryKey(id);
         List<Role> roles = roleService.findRoles(id);
@@ -46,7 +46,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    //@CacheEvict(value = "user",key = "#user.getId()")
+    @CacheEvict(value = "user",key = "#user.getId()")
     public void updateUser(User user) {
         System.out.println(user);
         userMapper.updateByPrimaryKeySelective(user);

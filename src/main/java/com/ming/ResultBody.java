@@ -22,13 +22,11 @@ public class ResultBody {
     }
 
     public static ResultBody success (Object data) {
-        ResultBody resultBody = new ResultBody("200","success",data);
-        return resultBody ;
+        return new ResultBody("200","success",data);
     }
 
     public static ResultBody error(CommonException exception) {
-        ResultBody resultBody = new ResultBody(exception.getCode(),exception.getMsg(),exception.getData());
-        return resultBody ;
+        return new ResultBody(exception.getCode(),exception.getMsg(),exception.getData());
     }
 
 }

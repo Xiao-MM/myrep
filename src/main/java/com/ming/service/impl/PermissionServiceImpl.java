@@ -2,6 +2,7 @@ package com.ming.service.impl;
 
 import com.ming.dao.PermissionMapper;
 import com.ming.dao.RolePermissionMapper;
+import com.ming.exception.ExceptionManager;
 import com.ming.pojo.Permission;
 import com.ming.service.PermissionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,13 @@ public class PermissionServiceImpl implements PermissionService {
     private PermissionMapper permissionMapper;
     @Autowired
     private RolePermissionMapper rolePermissionMapper;
+    @Autowired
+    private ExceptionManager exceptionManager;
+
+    @Override
+    public boolean isPermissionExist(Integer permissionId) {
+        return permissionMapper.existsWithPrimaryKey(permissionId);
+    }
 
     @Override
     public void addPermission(Permission permission) {
@@ -25,11 +33,17 @@ public class PermissionServiceImpl implements PermissionService {
 
     @Override
     public void delPermission(Integer permissionId) {
+        if (!this.isPermissionExist(permissionId)){
+           throw  exceptionManager.create("EC02000");
+        }
         permissionMapper.deleteByPrimaryKey(permissionId);
     }
 
     @Override
     public void updatePermission(Permission permission) {
+        if (!this.isPermissionExist(permission.getId())){
+            throw  exceptionManager.create("EC02000");
+        }
         permissionMapper.updateByPrimaryKeySelective(permission);
     }
 

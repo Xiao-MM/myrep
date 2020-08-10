@@ -5,8 +5,8 @@ import lombok.Getter;
 @Getter
 public class CommonException extends  RuntimeException  {
     private boolean track ;
-    private  String code ;
-    private  String msg;
+    private final String code ;
+    private final String msg;
     private Object data ;
 
     public CommonException(String code, String msg) {
