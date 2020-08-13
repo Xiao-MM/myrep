@@ -3,7 +3,6 @@ package com.ming.controller;
 import com.ming.pojo.Permission;
 import com.ming.service.PermissionService;
 import io.swagger.annotations.ApiOperation;
-import org.apache.ibatis.annotations.Delete;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +25,7 @@ public class PermissionController {
     @ApiOperation("添加操作")
     @DeleteMapping("/delete")
     @RequiresRoles("admin")
-    public String delPermission(Integer permissionId){
+    public String delPermission(Long permissionId){
         permissionService.delPermission(permissionId);
         return "删除权限成功！";
     }

@@ -23,7 +23,7 @@ public class PermissionServiceImpl implements PermissionService {
     private ExceptionManager exceptionManager;
 
     @Override
-    public boolean isPermissionExist(Integer permissionId) {
+    public boolean isPermissionExist(Long permissionId) {
         return permissionMapper.existsWithPrimaryKey(permissionId);
     }
 
@@ -33,7 +33,7 @@ public class PermissionServiceImpl implements PermissionService {
     }
 
     @Override
-    public void delPermission(Integer permissionId) {
+    public void delPermission(Long permissionId) {
         if (!this.isPermissionExist(permissionId)){
            throw  exceptionManager.create("EC02000");
         }
@@ -49,7 +49,7 @@ public class PermissionServiceImpl implements PermissionService {
     }
 
     @Override
-    public Permission findPermission(Integer permissionId) {
+    public Permission findPermission(Long permissionId) {
         return permissionMapper.selectByPrimaryKey(permissionId);
     }
 
@@ -59,9 +59,9 @@ public class PermissionServiceImpl implements PermissionService {
     }
 
     @Override
-    public List<Permission> findPermissions(Integer roleId) {
+    public List<Permission> findPermissions(Long roleId) {
         //查找出该角色拥有的所有权限的id
-        List<Integer> permissionIds = rolePermissionMapper.queryPermissionIdsByRoleId(roleId);
+        List<Long> permissionIds = rolePermissionMapper.queryPermissionIdsByRoleId(roleId);
         if (permissionIds==null||permissionIds.size()==0){
             return new ArrayList<>();
         }

@@ -16,7 +16,7 @@ import javax.persistence.Id;
 public class UserRole {
     @Id
     @KeySql(dialect = IdentityDialect.MYSQL)
-    private Integer id;
-    private Integer userId;
-    private Integer roleId;
+    private Long id;
+    private Long userId;
+    private Long roleId;
 }

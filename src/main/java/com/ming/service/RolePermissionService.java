@@ -9,18 +9,18 @@ public interface RolePermissionService {
      * @param roleId
      * @param permissionId
      */
-    void addPermission(Integer roleId,Integer permissionId);
+    void addPermission(Long roleId,Long permissionId);
 
     /**
      * 撤销角色权限
      * @param rolePermissionId
      */
-    void removePermission(Integer rolePermissionId);
+    void removePermission(Long rolePermissionId);
 
     /**
      * 查询角色拥有的操作id
      * @return
      */
-    List<Integer> findPermissionIdsByRoleId(Integer roleId);
+    List<Long> findPermissionIdsByRoleId(Long roleId);
 
 }

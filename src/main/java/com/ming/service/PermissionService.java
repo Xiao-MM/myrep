@@ -6,17 +6,17 @@ import java.util.List;
 
 public interface PermissionService {
 
-    boolean isPermissionExist(Integer permissionId);
+    boolean isPermissionExist(Long permissionId);
 
     void addPermission(Permission permission);
 
-    void delPermission(Integer permissionId);
+    void delPermission(Long permissionId);
 
     void updatePermission(Permission permission);
 
-    Permission findPermission(Integer permissionId);
+    Permission findPermission(Long permissionId);
 
     List<Permission> findPermissions();
 
-    List<Permission> findPermissions(Integer roleId);
+    List<Permission> findPermissions(Long roleId);
 }

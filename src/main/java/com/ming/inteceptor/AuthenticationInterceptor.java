@@ -48,7 +48,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
             setErrorResponse("EC01004",response);
             return false;
         }
-        Integer uid;
+        Long uid;
         try {
             uid = JWTUtil.getUid(token);
         }catch (JWTDecodeException e){

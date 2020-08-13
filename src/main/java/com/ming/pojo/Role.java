@@ -19,7 +19,7 @@ import java.util.List;
 public class Role {
     @Id
     @KeySql(dialect = IdentityDialect.MYSQL)
-    private Integer id;
+    private Long id;
     private String name;
     private String description;
     //@ManyToMany

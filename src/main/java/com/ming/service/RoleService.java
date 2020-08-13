@@ -8,11 +8,11 @@ public interface RoleService {
 
     void addRole(Role role);
 
-    void delRole(Integer roleId);
+    void delRole(Long roleId);
 
     void updateRole(Role role);
 
-    Role findRole(Integer roleId);
+    Role findRole(Long roleId);
 
     List<Role> findRoles();
 
@@ -21,5 +21,5 @@ public interface RoleService {
      * @param userId
      * @return
      */
-    List<Role> findRoles(Integer userId);
+    List<Role> findRoles(Long userId);
 }

@@ -41,10 +41,10 @@ public class JWTUtil {
      * @param token
      * @return
      */
-    public static Integer getUid(String token){
+    public static Long getUid(String token){
        DecodedJWT jwt = JWT.decode(token);
        Claim uid = jwt.getClaim("uid");
-       return uid.asInt();
+       return uid.asLong();
 
 
     }

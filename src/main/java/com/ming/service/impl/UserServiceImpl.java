@@ -44,7 +44,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Cacheable(value = "user",key = "#id")
-    public User findUserById(Integer id) {
+    public User findUserById(Long id) {
         User user = userMapper.selectByPrimaryKey(id);
         List<Role> roles = roleService.findRoles(id);
         user.setRoles(roles);

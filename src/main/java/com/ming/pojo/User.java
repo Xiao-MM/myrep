@@ -19,7 +19,7 @@ import java.util.List;
 public class User implements Serializable {
     @Id
     @KeySql(dialect = IdentityDialect.MYSQL)
-    private Integer id;
+    private Long id;
     private String username;
     private String password;
     private String passwordSalt;

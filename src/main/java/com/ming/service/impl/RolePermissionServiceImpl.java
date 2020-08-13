@@ -23,7 +23,7 @@ public class RolePermissionServiceImpl implements RolePermissionService {
      * @param permissionId
      */
     @Override
-    public void addPermission(Integer roleId, Integer permissionId) {
+    public void addPermission(Long roleId, Long permissionId) {
 
         RolePermission rolePermission = new RolePermission();
         rolePermission.setRoleId(roleId);
@@ -38,7 +38,7 @@ public class RolePermissionServiceImpl implements RolePermissionService {
      * @param rolePermissionId
      */
     @Override
-    public void removePermission(Integer rolePermissionId) {
+    public void removePermission(Long rolePermissionId) {
         rolePermissionMapper.deleteByPrimaryKey(rolePermissionId);
     }
 
@@ -49,7 +49,7 @@ public class RolePermissionServiceImpl implements RolePermissionService {
      * @return
      */
     @Override
-    public List<Integer> findPermissionIdsByRoleId(Integer roleId) {
+    public List<Long> findPermissionIdsByRoleId(Long roleId) {
         return rolePermissionMapper.queryPermissionIdsByRoleId(roleId);
     }
 }

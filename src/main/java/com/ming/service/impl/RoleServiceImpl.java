@@ -29,7 +29,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public void delRole(Integer roleId) {
+    public void delRole(Long roleId) {
         roleMapper.deleteByPrimaryKey(roleId);
     }
 
@@ -39,7 +39,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public Role findRole(Integer roleId) {
+    public Role findRole(Long roleId) {
         Role role = roleMapper.selectByPrimaryKey(roleId);
         List<Permission> permissions = permissionService.findPermissions(roleId);
         role.setPermissions(permissions);
@@ -58,8 +58,8 @@ public class RoleServiceImpl implements RoleService {
      * @return
      */
     @Override
-    public List<Role> findRoles(Integer userId) {
-        List<Integer> roleIds = userRoleMapper.queryRoleIdsByUserId(userId);
+    public List<Role> findRoles(Long userId) {
+        List<Long> roleIds = userRoleMapper.queryRoleIdsByUserId(userId);
         //如果为空就不查了
         if (roleIds==null||roleIds.size()==0){
             return new ArrayList<>();

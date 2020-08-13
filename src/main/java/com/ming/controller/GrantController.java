@@ -21,13 +21,13 @@ public class GrantController {
 
     @ApiOperation("角色分配权限")
     @GetMapping("/resource/add/{roleId}/{resourceId}")
-    public String addResource(@PathVariable Integer roleId, @PathVariable Integer resourceId){
+    public String addResource(@PathVariable Long roleId, @PathVariable Long resourceId){
         rolePermissionService.addPermission(roleId,resourceId);
         return "角色分配权限成功";
     }
     @ApiOperation("用户分配角色")
     @GetMapping("/role/add/{userId}/{roleId}")
-    public String addRole(@PathVariable Integer userId, @PathVariable Integer roleId){
+    public String addRole(@PathVariable Long userId, @PathVariable Long roleId){
         userRoleService.addRole(userId,roleId);
         return "用户分配角色成功！";
     }

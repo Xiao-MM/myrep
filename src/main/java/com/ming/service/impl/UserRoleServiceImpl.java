@@ -18,7 +18,7 @@ public class UserRoleServiceImpl implements UserRoleService {
      * @param roleId
      */
     @Override
-    public void addRole(Integer userId, Integer roleId) {
+    public void addRole(Long userId, Long roleId) {
         UserRole userRole = new UserRole();
         userRole.setUserId(userId);
         userRole.setRoleId(roleId);
@@ -31,7 +31,7 @@ public class UserRoleServiceImpl implements UserRoleService {
      * @param userRoleId
      */
     @Override
-    public void removeRole(Integer userRoleId) {
+    public void removeRole(Long userRoleId) {
         userRoleMapper.deleteByPrimaryKey(userRoleId);
     }
 }

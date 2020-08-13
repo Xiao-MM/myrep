@@ -9,5 +9,5 @@ import java.util.List;
 public interface UserRoleMapper extends Mapper<UserRole> {
 
     @Select("select role_id from user_role where user_id = #{userId}")
-    List<Integer> queryRoleIdsByUserId(Integer userId);
+    List<Long> queryRoleIdsByUserId(Long userId);
 }

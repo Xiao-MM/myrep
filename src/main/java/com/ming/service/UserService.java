@@ -8,7 +8,7 @@ public interface UserService {
 
     User findUserByUsername(String username);
 
-    User findUserById(Integer id);
+    User findUserById(Long id);
 
     void updateUser(User user);
 }

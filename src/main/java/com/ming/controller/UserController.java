@@ -75,13 +75,13 @@ public class UserController {
         if (subject.getPrincipal()!=null){
             subject.logout();
         }
-        return "已成功退出登录！";
+        return "您已成功退出登录！";
     }
 
 
     @ApiOperation("查看用户")
     @GetMapping("/find/{id}")
-    public User findUser(@PathVariable Integer id){
+    public User findUser(@PathVariable Long id){
         return userService.findUserById(id);
     }
 

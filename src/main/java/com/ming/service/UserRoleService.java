@@ -8,12 +8,12 @@ public interface UserRoleService {
      * @param userId
      * @param roleId
      */
-    void addRole(Integer userId,Integer roleId);
+    void addRole(Long userId,Long roleId);
 
     /**
      * 撤销用户角色
      * @param userRoleId
      */
-    void removeRole(Integer userRoleId);
+    void removeRole(Long userRoleId);
 
 }
