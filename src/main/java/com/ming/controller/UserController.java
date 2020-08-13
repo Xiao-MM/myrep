@@ -1,5 +1,7 @@
 package com.ming.controller;
 
+import com.ming.dto.UserLoginDTO;
+import com.ming.dto.UserRegisterDTO;
 import com.ming.exception.ExceptionManager;
 import com.ming.pojo.User;
 import com.ming.service.UserService;
@@ -9,13 +11,19 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.crypto.SecureRandomNumberGenerator;
+import org.apache.shiro.crypto.hash.Md5Hash;
 import org.apache.shiro.subject.Subject;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 
-@RestController
 @Slf4j
+@Validated
+@RestController
 @RequestMapping("/user")
 public class UserController {
 
@@ -26,11 +34,11 @@ public class UserController {
 
     @ApiOperation("用户登录")
     @PostMapping("/login")
-    public String login(String username, String password){
+    public String login(@RequestBody @Valid UserLoginDTO userLoginDTO){
         //使用shiro的方式进行登录
         //获取当前对象
         Subject subject = SecurityUtils.getSubject();
-        UsernamePasswordToken token = new UsernamePasswordToken(username,password);
+        UsernamePasswordToken token = new UsernamePasswordToken(userLoginDTO.getUsername(),userLoginDTO.getPassword());
         try {
             //进入userRealm的认证环节
             subject.login(token);
@@ -41,6 +49,24 @@ public class UserController {
         }
         return "登陆成功!";
     }
+
+    @ApiOperation("用户注册")
+    @PostMapping("/register")
+    public String register(@RequestBody @Valid UserRegisterDTO userRegisterDTO){
+        User user = new User();
+        BeanUtils.copyProperties(userRegisterDTO,user);
+        //生成盐
+        String passwordSalt = new SecureRandomNumberGenerator().nextBytes().toHex();
+        //生成加密后的密码
+        String newPassword = new Md5Hash(userRegisterDTO.getPassword(), passwordSalt, 1024).toString();
+
+        user.setPasswordSalt(passwordSalt);
+        user.setPassword(newPassword);
+        userService.addUser(user);
+
+        return "注册成功！";
+    }
+
 
     @ApiOperation("退出登录")
     @GetMapping("/logout")
@@ -73,26 +99,4 @@ public class UserController {
         userService.updateUser(user);
         return "更改用户信息成功！";
     }
-
-//    @ApiOperation("用户登录")
-//    @PostMapping("/login")
-//    public UserVO login(String username, String password){
-//
-//        User user = userService.findUserByUsername(username);
-//        if (user == null){
-//            throw exceptionManager.create("EC01000");
-//        }
-//        if (!(user.getPassword().equals(password))){
-//            throw exceptionManager.create("EC01001");
-//        }
-//        //成功登录一次后就将用户信息按照(id:user)存入redis
-//        //redisUtil.set(user.getId().toString(),user);
-//        String token = JWTUtil.generateToken(user);
-//        String sessionId = (String) request.getSession().getAttribute("sessionId");
-//        UserVO userVO = new UserVO();
-//        userVO.setUser(user);
-//        userVO.setToken(token);
-//        userVO.setSessionId(sessionId);
-//        return userVO;
-//    }
 }

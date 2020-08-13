@@ -2,6 +2,7 @@ package com.ming.conf;
 
 import com.ming.pojo.Permission;
 import com.ming.service.PermissionService;
+import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
@@ -81,10 +82,28 @@ public class ShiroConfig {
         filterMap.put("/swagger-ui.html/**","anon");
 
         filterMap.put("/user/login","anon"); //公开登录接口
-        filterMap.put("/open/api/sayHello","anon");//所有人都可以访问的接口
+        filterMap.put("/user/register","anon");//公开注册接口
         filterMap.put("/user/logout","user");//不用anon
         filterMap.put("/**","authc");//所有资源都需要验证
 
         return filterMap;
     }
+
+//    /**
+//     * 密码校验规则HashedCredentialsMatcher
+//     * 这个类是为了对密码进行编码的 ,
+//     * 防止密码在数据库里明码保存 , 当然在登陆认证的时候 ,
+//     * 这个类也负责对form里输入的密码进行编码
+//     * 处理认证匹配处理器：如果自定义需要实现继承HashedCredentialsMatcher
+//     */
+//    @Bean
+//    public HashedCredentialsMatcher hashedCredentialsMatcher() {
+//        HashedCredentialsMatcher credentialsMatcher = new HashedCredentialsMatcher();
+//        //指定加密方式为MD5
+//        credentialsMatcher.setHashAlgorithmName("MD5");
+//        //加密次数
+//        credentialsMatcher.setHashIterations(1024);
+//        credentialsMatcher.setStoredCredentialsHexEncoded(true);
+//        return credentialsMatcher;
+//    }
 }

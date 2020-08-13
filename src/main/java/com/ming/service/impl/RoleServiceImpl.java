@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -40,7 +41,7 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public Role findRole(Integer roleId) {
         Role role = roleMapper.selectByPrimaryKey(roleId);
-        List<Permission> permissions = permissionService.findPermissionsByRoleId(roleId);
+        List<Permission> permissions = permissionService.findPermissions(roleId);
         role.setPermissions(permissions);
         return role;
     }
@@ -59,8 +60,12 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public List<Role> findRoles(Integer userId) {
         List<Integer> roleIds = userRoleMapper.queryRoleIdsByUserId(userId);
-        Example example1 =new Example(Role.class);
-        example1.createCriteria().andIn("id",roleIds);
-        return roleMapper.selectByExample(example1);
+        //如果为空就不查了
+        if (roleIds==null||roleIds.size()==0){
+            return new ArrayList<>();
+        }
+        Example example =new Example(Role.class);
+        example.createCriteria().andIn("id",roleIds);
+        return roleMapper.selectByExample(example);
     }
 }

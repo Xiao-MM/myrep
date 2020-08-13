@@ -23,6 +23,12 @@ public class UserServiceImpl implements UserService {
     private RoleService roleService;
 
     @Override
+    public User addUser(User user) {
+        userMapper.insertSelective(user);
+        return user;
+    }
+
+    @Override
     public User findUserByUsername(String username) {
 
         Example example = new Example(User.class);

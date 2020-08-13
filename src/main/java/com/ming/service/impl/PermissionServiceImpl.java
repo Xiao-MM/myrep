@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -58,9 +59,12 @@ public class PermissionServiceImpl implements PermissionService {
     }
 
     @Override
-    public List<Permission> findPermissionsByRoleId(Integer roleId) {
+    public List<Permission> findPermissions(Integer roleId) {
         //查找出该角色拥有的所有权限的id
         List<Integer> permissionIds = rolePermissionMapper.queryPermissionIdsByRoleId(roleId);
+        if (permissionIds==null||permissionIds.size()==0){
+            return new ArrayList<>();
+        }
         //根据这些id查询出所有的权限信息
         Example example = new Example(Permission.class);
         example.createCriteria().andIn("id",permissionIds);
