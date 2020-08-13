@@ -1,11 +1,11 @@
 package com.ming.service.impl;
 
 import com.ming.dao.UserMapper;
+import com.ming.exception.ExceptionManager;
 import com.ming.pojo.Role;
 import com.ming.pojo.User;
 import com.ming.service.RoleService;
 import com.ming.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -19,13 +19,32 @@ public class UserServiceImpl implements UserService {
 
     @Resource
     private UserMapper userMapper;
-    @Autowired
+    @Resource
     private RoleService roleService;
+    @Resource
+    private ExceptionManager exceptionManager;
+
+    @Override
+    public boolean isUserExist(Long userId) {
+        User user = userMapper.selectByPrimaryKey(userId);
+        return user!=null&&!user.getDeleted().equals(User.DELETE);
+    }
 
     @Override
     public User addUser(User user) {
         userMapper.insertSelective(user);
         return user;
+    }
+
+    @Override
+    public void deleteUser(Long userId) {
+        if (!this.isUserExist(userId)){
+            throw exceptionManager.create("EC01000");
+        }
+        User user = new User();
+        user.setId(userId);
+        user.setDeleted(User.DELETE);
+        userMapper.updateByPrimaryKeySelective(user);
     }
 
     @Override
@@ -46,7 +65,7 @@ public class UserServiceImpl implements UserService {
     @Cacheable(value = "user",key = "#id")
     public User findUserById(Long id) {
         User user = userMapper.selectByPrimaryKey(id);
-        List<Role> roles = roleService.findRoles(id);
+        List<Role> roles = roleService.findRolesById(id);
         user.setRoles(roles);
         return user;
     }
@@ -54,7 +73,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @CacheEvict(value = "user",key = "#user.getId()")
     public void updateUser(User user) {
-        System.out.println(user);
+
         userMapper.updateByPrimaryKeySelective(user);
     }
 

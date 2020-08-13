@@ -5,6 +5,7 @@ import com.ming.dto.UserRegisterDTO;
 import com.ming.exception.ExceptionManager;
 import com.ming.pojo.User;
 import com.ming.service.UserService;
+import com.ming.utils.TimeUtil;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
@@ -62,6 +63,7 @@ public class UserController {
 
         user.setPasswordSalt(passwordSalt);
         user.setPassword(newPassword);
+        user.setCreateTime(TimeUtil.getCurrentTime());
         userService.addUser(user);
 
         return "注册成功！";

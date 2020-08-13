@@ -17,10 +17,4 @@ public interface RolePermissionService {
      */
     void removePermission(Long rolePermissionId);
 
-    /**
-     * 查询角色拥有的操作id
-     * @return
-     */
-    List<Long> findPermissionIdsByRoleId(Long roleId);
-
 }

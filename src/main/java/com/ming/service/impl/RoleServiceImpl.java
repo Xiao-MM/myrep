@@ -1,47 +1,76 @@
 package com.ming.service.impl;
 
 import com.ming.dao.RoleMapper;
-import com.ming.dao.UserRoleMapper;
+import com.ming.dao.RolePermissionMapper;
+import com.ming.dto.RoleDTO;
+import com.ming.exception.ExceptionManager;
 import com.ming.pojo.Permission;
 import com.ming.pojo.Role;
 import com.ming.service.PermissionService;
 import com.ming.service.RoleService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.ming.utils.TimeUtil;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
-import tk.mybatis.mapper.entity.Example;
 
-import java.util.ArrayList;
+import javax.annotation.Resource;
 import java.util.List;
 
 @Service
 public class RoleServiceImpl implements RoleService {
 
-    @Autowired
+    @Resource
     private RoleMapper roleMapper;
-    @Autowired
+    @Resource
+    private RolePermissionMapper rolePermissionMapper;
+    @Resource
     private PermissionService permissionService;
-    @Autowired
-    private UserRoleMapper userRoleMapper;
+    @Resource
+    private ExceptionManager exceptionManager;
+
+    /**
+     * 判断角色是否存在
+     *
+     * @param roleId
+     * @return
+     */
+    @Override
+    public boolean isRoleExist(Long roleId) {
+        Role role = roleMapper.selectByPrimaryKey(roleId);
+        return role != null && !role.getDeleted().equals(Role.DELETE);
+    }
 
     @Override
-    public void addRole(Role role) {
+    public void addRole(RoleDTO roleDTO) {
+        Role role = new Role();
+        BeanUtils.copyProperties(roleDTO,role);
+        role.setCreateTime(TimeUtil.getCurrentTime());
         roleMapper.insertSelective(role);
     }
 
     @Override
-    public void delRole(Long roleId) {
-        roleMapper.deleteByPrimaryKey(roleId);
+    public void deleteRole(Long roleId) {
+        if (!this.isRoleExist(roleId)){
+            throw exceptionManager.create("EC03000");
+        }
+        Role role = new Role();
+        role.setId(roleId);
+        role.setDeleted(Role.DELETE);
+        roleMapper.updateByPrimaryKeySelective(role);
+        rolePermissionMapper.deleteRolePermissionsByRoleId(roleId);
     }
 
     @Override
     public void updateRole(Role role) {
+        if (!this.isRoleExist(role.getId())){
+            throw exceptionManager.create("EC03000");
+        }
         roleMapper.updateByPrimaryKeySelective(role);
     }
 
     @Override
     public Role findRole(Long roleId) {
         Role role = roleMapper.selectByPrimaryKey(roleId);
-        List<Permission> permissions = permissionService.findPermissions(roleId);
+        List<Permission> permissions = permissionService.findPermissionsByRoleId(roleId);
         role.setPermissions(permissions);
         return role;
     }
@@ -58,14 +87,7 @@ public class RoleServiceImpl implements RoleService {
      * @return
      */
     @Override
-    public List<Role> findRoles(Long userId) {
-        List<Long> roleIds = userRoleMapper.queryRoleIdsByUserId(userId);
-        //如果为空就不查了
-        if (roleIds==null||roleIds.size()==0){
-            return new ArrayList<>();
-        }
-        Example example =new Example(Role.class);
-        example.createCriteria().andIn("id",roleIds);
-        return roleMapper.selectByExample(example);
+    public List<Role> findRolesById(Long userId) {
+        return roleMapper.findRolesByUserId(userId);
     }
 }

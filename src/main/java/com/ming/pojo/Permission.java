@@ -14,10 +14,17 @@ import javax.persistence.Id;
 @NoArgsConstructor
 @ToString
 public class Permission {
+    /**
+     * 标记已删除
+     */
+    public static Short DELETE = 1;
+
     @Id
     @KeySql(dialect = IdentityDialect.MYSQL)
     private Long id;
     private String name;
     private String url;
     private String description;
+    private String createTime;
+    private Short deleted;
 }

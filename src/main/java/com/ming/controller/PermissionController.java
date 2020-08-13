@@ -1,42 +1,51 @@
 package com.ming.controller;
 
+import com.ming.dto.PermissionDTO;
 import com.ming.pojo.Permission;
 import com.ming.service.PermissionService;
 import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.authz.annotation.RequiresRoles;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import javax.annotation.Resource;
 
 @RestController
 @RequestMapping("/permission")
 public class PermissionController {
-    @Autowired
+
+    @Resource
     private PermissionService permissionService;
 
-    @ApiOperation("添加操作")
-    @PostMapping("/add")
     @RequiresRoles("admin")
-    public String addPermission(@RequestBody Permission permission){
-        permissionService.addPermission(permission);
+    @ApiOperation("添加权限")
+    @PostMapping("/add")
+    public String addPermission(@RequestBody PermissionDTO permissionDTO){
+        permissionService.addPermission(permissionDTO);
         return "添加操作成功！";
     }
-    @ApiOperation("添加操作")
-    @DeleteMapping("/delete")
+
     @RequiresRoles("admin")
+    @ApiOperation("删除权限")
+    @DeleteMapping("/delete")
     public String delPermission(Long permissionId){
         permissionService.delPermission(permissionId);
         return "删除权限成功！";
     }
 
-    @RequiresRoles({"admin","manager"})
-    @ApiOperation("查看操作")
-    @GetMapping("/find")
-    public List<Permission> findPermissions(){
-        return permissionService.findPermissions();
+    @RequiresRoles("admin")
+    @ApiOperation("更新权限")
+    @DeleteMapping("/update")
+    public String updatePermission(Permission permission){
+        permissionService.updatePermission(permission);
+        return "删除权限成功！";
     }
 
+    @RequiresRoles("admin")
+    @ApiOperation("查看权限")
+    @DeleteMapping("/find")
+    public Permission findPermission(Long permissionId){
+        return permissionService.findPermission(permissionId);
+    }
 
 
 }

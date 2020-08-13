@@ -7,8 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 @Service
 @Transactional
 public class RolePermissionServiceImpl implements RolePermissionService {
@@ -40,16 +38,5 @@ public class RolePermissionServiceImpl implements RolePermissionService {
     @Override
     public void removePermission(Long rolePermissionId) {
         rolePermissionMapper.deleteByPrimaryKey(rolePermissionId);
-    }
-
-    /**
-     * 查询角色拥有的操作id
-     *
-     * @param roleId
-     * @return
-     */
-    @Override
-    public List<Long> findPermissionIdsByRoleId(Long roleId) {
-        return rolePermissionMapper.queryPermissionIdsByRoleId(roleId);
     }
 }

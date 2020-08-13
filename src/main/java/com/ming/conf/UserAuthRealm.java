@@ -19,6 +19,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -28,11 +29,11 @@ import java.util.List;
 @Component
 @Slf4j
 public class UserAuthRealm extends AuthorizingRealm {
-    @Autowired
+    @Resource
     private UserService userService;
-    @Autowired
+    @Resource
     private RoleService roleService;
-    @Autowired
+    @Resource
     private PermissionService permissionService;
     /**
      * 进行授权逻辑
@@ -48,10 +49,10 @@ public class UserAuthRealm extends AuthorizingRealm {
         User user = userService.findUserByUsername(username);
 
         //获取当前用户所属角色
-        List<Role> roles = roleService.findRoles(user.getId());
+        List<Role> roles = roleService.findRolesById(user.getId());
         roles.forEach(role -> {
             //获取每个角色所拥有的权限
-            List<Permission> permissions = permissionService.findPermissions(role.getId());
+            List<Permission> permissions = permissionService.findPermissionsByRoleId(role.getId());
             role.setPermissions(permissions);
         });
 

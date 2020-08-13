@@ -2,33 +2,42 @@ package com.ming.service.impl;
 
 import com.ming.dao.PermissionMapper;
 import com.ming.dao.RolePermissionMapper;
+import com.ming.dto.PermissionDTO;
+import com.ming.dto.PermissionFindDTO;
 import com.ming.exception.ExceptionManager;
 import com.ming.pojo.Permission;
 import com.ming.service.PermissionService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.ming.utils.PageUtil;
+import com.ming.utils.TimeUtil;
+import com.ming.vo.PageVO;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import tk.mybatis.mapper.entity.Example;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class PermissionServiceImpl implements PermissionService {
 
-    @Autowired
+    @Resource
     private PermissionMapper permissionMapper;
-    @Autowired
-    private RolePermissionMapper rolePermissionMapper;
-    @Autowired
+    @Resource
     private ExceptionManager exceptionManager;
 
     @Override
     public boolean isPermissionExist(Long permissionId) {
-        return permissionMapper.existsWithPrimaryKey(permissionId);
+        Permission permission = permissionMapper.selectByPrimaryKey(permissionId);
+        return permission != null && !permission.getDeleted().equals(Permission.DELETE);
     }
 
     @Override
-    public void addPermission(Permission permission) {
+    public void addPermission(PermissionDTO permissionDTO) {
+        Permission permission = new Permission();
+        BeanUtils.copyProperties(permissionDTO,permission);
+        permission.setCreateTime(TimeUtil.getCurrentTime());
         permissionMapper.insertSelective(permission);
     }
 
@@ -37,7 +46,10 @@ public class PermissionServiceImpl implements PermissionService {
         if (!this.isPermissionExist(permissionId)){
            throw  exceptionManager.create("EC02000");
         }
-        permissionMapper.deleteByPrimaryKey(permissionId);
+        Permission permission = new Permission();
+        permission.setId(permissionId);
+        permission.setDeleted(Permission.DELETE);
+        permissionMapper.updateByPrimaryKeySelective(permission);
     }
 
     @Override
@@ -53,22 +65,38 @@ public class PermissionServiceImpl implements PermissionService {
         return permissionMapper.selectByPrimaryKey(permissionId);
     }
 
+    /**
+     * 查找所有权限
+     *
+     * @return
+     */
     @Override
-    public List<Permission> findPermissions() {
+    public List<Permission> findAllPermissions() {
         return permissionMapper.selectAll();
     }
 
+    /**
+     * 搜索权限
+     * @param permissionFindDTO
+     * @return
+     */
     @Override
-    public List<Permission> findPermissions(Long roleId) {
-        //查找出该角色拥有的所有权限的id
-        List<Long> permissionIds = rolePermissionMapper.queryPermissionIdsByRoleId(roleId);
-        if (permissionIds==null||permissionIds.size()==0){
-            return new ArrayList<>();
-        }
-        //根据这些id查询出所有的权限信息
+    public PageVO<Permission> findPermissions(PermissionFindDTO permissionFindDTO) {
+        PageUtil.startPage(permissionFindDTO.getPageDTO());
         Example example = new Example(Permission.class);
-        example.createCriteria().andIn("id",permissionIds);
-        return permissionMapper.selectByExample(example);
+        Example.Criteria criteria = example.createCriteria();
+        if (!StringUtils.isEmpty(permissionFindDTO.getName())){
+            criteria.orLike("name","%"+permissionFindDTO.getName()+"%");
+        }
+        if (!StringUtils.isEmpty(permissionFindDTO.getUrl())){
+            criteria.orLike("url","%"+permissionFindDTO.getUrl()+"%");
+        }
+        return new PageVO<>(permissionMapper.selectByExample(example));
+    }
+
+    @Override
+    public List<Permission> findPermissionsByRoleId(Long roleId) {
+        return permissionMapper.findPermissionsByRoleId(roleId);
     }
 
 

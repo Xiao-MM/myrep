@@ -1,14 +1,21 @@
 package com.ming.service;
 
+import com.ming.dto.RoleDTO;
 import com.ming.pojo.Role;
 
 import java.util.List;
 
 public interface RoleService {
+    /**
+     * 判断角色是否存在
+     * @param roleId
+     * @return
+     */
+    boolean isRoleExist(Long roleId);
 
-    void addRole(Role role);
+    void addRole(RoleDTO roleDTO);
 
-    void delRole(Long roleId);
+    void deleteRole(Long roleId);
 
     void updateRole(Role role);
 
@@ -21,5 +28,5 @@ public interface RoleService {
      * @param userId
      * @return
      */
-    List<Role> findRoles(Long userId);
+    List<Role> findRolesById(Long userId);
 }
