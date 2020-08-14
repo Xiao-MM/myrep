@@ -3,15 +3,16 @@ package com.ming.service.impl;
 import com.ming.dao.RolePermissionMapper;
 import com.ming.pojo.RolePermission;
 import com.ming.service.RolePermissionService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.Resource;
 
 @Service
 @Transactional
 public class RolePermissionServiceImpl implements RolePermissionService {
 
-    @Autowired
+    @Resource
     private RolePermissionMapper rolePermissionMapper;
 
     /**

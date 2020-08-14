@@ -8,6 +8,9 @@ import java.util.List;
 
 public interface PermissionMapper extends Mapper<Permission> {
 
+    @Select("select * from permission where deleted = 0")
+    List<Permission> findAll();
+
     @Select("select p.* from permission p inner join role_permission rp on p.id = rp.permission_id where rp.role_id = #{roleId}")
     List<Permission> findPermissionsByRoleId(Long roleId);
 }

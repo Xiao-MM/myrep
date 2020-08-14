@@ -48,7 +48,7 @@ public class PermissionTestController {
      * 需要add权限才能访问的api
      * @return
      */
-    @RequiresPermissions("add")
+    @RequiresPermissions("user_add")
     @GetMapping("/requirePermissionsAdd")
     public String requirePermissionsAdd(){
         return "RequiresPermissions";
@@ -57,7 +57,7 @@ public class PermissionTestController {
      * 需要add权限才能访问的api
      * @return
      */
-    @RequiresPermissions("delete")
+    @RequiresPermissions("user_delete")
     @GetMapping("/requirePermissionsDelete")
     public String requirePermissionsDelete(){
         return "requirePermissionsDelete";

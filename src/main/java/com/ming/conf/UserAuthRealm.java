@@ -1,5 +1,6 @@
 package com.ming.conf;
 
+import com.ming.exception.ExceptionManager;
 import com.ming.pojo.Permission;
 import com.ming.pojo.Role;
 import com.ming.pojo.User;
@@ -14,7 +15,6 @@ import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.ByteSource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
@@ -35,6 +35,8 @@ public class UserAuthRealm extends AuthorizingRealm {
     private RoleService roleService;
     @Resource
     private PermissionService permissionService;
+    @Resource
+    private ExceptionManager exceptionManager;
     /**
      * 进行授权逻辑
      * @param principalCollection
@@ -47,7 +49,9 @@ public class UserAuthRealm extends AuthorizingRealm {
         //获取当前用户
         String username = (String) principalCollection.getPrimaryPrincipal();
         User user = userService.findUserByUsername(username);
-
+        if (user==null||user.getId()==null){
+            throw exceptionManager.create("EC01000");
+        }
         //获取当前用户所属角色
         List<Role> roles = roleService.findRolesById(user.getId());
         roles.forEach(role -> {

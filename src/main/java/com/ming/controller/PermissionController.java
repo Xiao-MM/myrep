@@ -8,6 +8,7 @@ import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @RestController
 @RequestMapping("/permission")
@@ -26,26 +27,32 @@ public class PermissionController {
 
     @RequiresRoles("admin")
     @ApiOperation("删除权限")
-    @DeleteMapping("/delete")
-    public String delPermission(Long permissionId){
+    @GetMapping("/delete/{permissionId}")
+    public String delPermission(@PathVariable Long permissionId){
         permissionService.delPermission(permissionId);
         return "删除权限成功！";
     }
 
     @RequiresRoles("admin")
     @ApiOperation("更新权限")
-    @DeleteMapping("/update")
-    public String updatePermission(Permission permission){
+    @PostMapping("/update")
+    public String updatePermission(@RequestBody Permission permission){
         permissionService.updatePermission(permission);
         return "删除权限成功！";
     }
 
     @RequiresRoles("admin")
     @ApiOperation("查看权限")
-    @DeleteMapping("/find")
-    public Permission findPermission(Long permissionId){
+    @GetMapping("/find/{permissionId}")
+    public Permission findPermission(@PathVariable Long permissionId){
         return permissionService.findPermission(permissionId);
     }
 
+    @RequiresRoles(value = {"admin"})
+    @ApiOperation("查找所有权限")
+    @GetMapping("/find/all")
+    public List<Permission> findAllPermissions(){
+        return permissionService.findAllPermissions();
+    }
 
 }

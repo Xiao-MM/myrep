@@ -8,6 +8,9 @@ import java.util.List;
 
 public interface RoleMapper extends Mapper<Role> {
 
+    @Select("select * from role where deleted = 0")
+    List<Role> findAllRoles();
+
     @Select("select r.* from role r inner join user_role ur on r.id = ur.role_id where ur.user_id = #{userId}")
     List<Role> findRolesByUserId(Long userId);
 }

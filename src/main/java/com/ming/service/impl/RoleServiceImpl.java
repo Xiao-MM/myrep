@@ -39,6 +39,10 @@ public class RoleServiceImpl implements RoleService {
         return role != null && !role.getDeleted().equals(Role.DELETE);
     }
 
+    /**
+     * 添加角色
+     * @param roleDTO
+     */
     @Override
     public void addRole(RoleDTO roleDTO) {
         Role role = new Role();
@@ -47,6 +51,10 @@ public class RoleServiceImpl implements RoleService {
         roleMapper.insertSelective(role);
     }
 
+    /**
+     * 删除角色
+     * @param roleId
+     */
     @Override
     public void deleteRole(Long roleId) {
         if (!this.isRoleExist(roleId)){
@@ -59,6 +67,10 @@ public class RoleServiceImpl implements RoleService {
         rolePermissionMapper.deleteRolePermissionsByRoleId(roleId);
     }
 
+    /**
+     * 修改角色
+     * @param role
+     */
     @Override
     public void updateRole(Role role) {
         if (!this.isRoleExist(role.getId())){
@@ -67,6 +79,11 @@ public class RoleServiceImpl implements RoleService {
         roleMapper.updateByPrimaryKeySelective(role);
     }
 
+    /**
+     * 查找角色
+     * @param roleId
+     * @return
+     */
     @Override
     public Role findRole(Long roleId) {
         Role role = roleMapper.selectByPrimaryKey(roleId);
@@ -75,9 +92,13 @@ public class RoleServiceImpl implements RoleService {
         return role;
     }
 
+    /**
+     * 查找所有角色
+     * @return
+     */
     @Override
     public List<Role> findRoles() {
-        return roleMapper.selectAll();
+        return roleMapper.findAllRoles();
     }
 
     /**

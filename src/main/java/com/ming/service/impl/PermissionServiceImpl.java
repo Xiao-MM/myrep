@@ -1,7 +1,6 @@
 package com.ming.service.impl;
 
 import com.ming.dao.PermissionMapper;
-import com.ming.dao.RolePermissionMapper;
 import com.ming.dto.PermissionDTO;
 import com.ming.dto.PermissionFindDTO;
 import com.ming.exception.ExceptionManager;
@@ -16,7 +15,6 @@ import org.springframework.util.StringUtils;
 import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -72,7 +70,7 @@ public class PermissionServiceImpl implements PermissionService {
      */
     @Override
     public List<Permission> findAllPermissions() {
-        return permissionMapper.selectAll();
+        return permissionMapper.findAll();
     }
 
     /**

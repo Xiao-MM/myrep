@@ -1,11 +1,13 @@
 package com.ming.service.impl;
 
 import com.ming.dao.UserMapper;
+import com.ming.dto.UserDTO;
 import com.ming.exception.ExceptionManager;
 import com.ming.pojo.Role;
 import com.ming.pojo.User;
 import com.ming.service.RoleService;
 import com.ming.service.UserService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -73,9 +75,16 @@ public class UserServiceImpl implements UserService {
     @Override
     @CacheEvict(value = "user",key = "#user.getId()")
     public void updateUser(User user) {
-
         userMapper.updateByPrimaryKeySelective(user);
     }
 
-
+    /**
+     * 获取所有用户
+     *
+     * @return
+     */
+    @Override
+    public List<User> findAllUsers() {
+        return userMapper.findAllUsers();
+    }
 }
