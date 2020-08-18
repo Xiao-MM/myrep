@@ -28,7 +28,7 @@ public class PermissionServiceImpl implements PermissionService {
     @Override
     public boolean isPermissionExist(Long permissionId) {
         Permission permission = permissionMapper.selectByPrimaryKey(permissionId);
-        return permission != null && !permission.getDeleted().equals(Permission.DELETE);
+        return permission != null && permission.getDeleted().equals(Permission.EXIST);
     }
 
     @Override
@@ -46,7 +46,7 @@ public class PermissionServiceImpl implements PermissionService {
         }
         Permission permission = new Permission();
         permission.setId(permissionId);
-        permission.setDeleted(Permission.DELETE);
+        permission.setDeleted(System.currentTimeMillis());
         permissionMapper.updateByPrimaryKeySelective(permission);
     }
 
@@ -60,7 +60,7 @@ public class PermissionServiceImpl implements PermissionService {
 
     @Override
     public Permission findPermission(Long permissionId) {
-        return permissionMapper.selectByPrimaryKey(permissionId);
+        return permissionMapper.findPermission(permissionId);
     }
 
     /**

@@ -20,7 +20,7 @@ public class User implements Serializable {
     /**
      * 标记已删除
      */
-    public static Short DELETE = 1;
+    public static Long EXIST = 0L;
     @Id
     @KeySql(dialect = IdentityDialect.MYSQL)
     private Long id;
@@ -28,7 +28,7 @@ public class User implements Serializable {
     private String password;
     private String passwordSalt;
     private String createTime;
-    private Short deleted;
+    private Long deleted;
     @Transient
     private List<Role> roles;
 }

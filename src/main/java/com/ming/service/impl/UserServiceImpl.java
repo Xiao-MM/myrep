@@ -1,13 +1,11 @@
 package com.ming.service.impl;
 
 import com.ming.dao.UserMapper;
-import com.ming.dto.UserDTO;
 import com.ming.exception.ExceptionManager;
 import com.ming.pojo.Role;
 import com.ming.pojo.User;
 import com.ming.service.RoleService;
 import com.ming.service.UserService;
-import org.springframework.beans.BeanUtils;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -29,7 +27,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean isUserExist(Long userId) {
         User user = userMapper.selectByPrimaryKey(userId);
-        return user!=null&&!user.getDeleted().equals(User.DELETE);
+        return user!=null&& user.getDeleted().equals(User.EXIST);
     }
 
     @Override
@@ -45,7 +43,7 @@ public class UserServiceImpl implements UserService {
         }
         User user = new User();
         user.setId(userId);
-        user.setDeleted(User.DELETE);
+        user.setDeleted(System.currentTimeMillis());
         userMapper.updateByPrimaryKeySelective(user);
     }
 
@@ -66,7 +64,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Cacheable(value = "user",key = "#id")
     public User findUserById(Long id) {
-        User user = userMapper.selectByPrimaryKey(id);
+        User user = userMapper.findUserById(id);
         List<Role> roles = roleService.findRolesById(id);
         user.setRoles(roles);
         return user;

@@ -36,7 +36,7 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public boolean isRoleExist(Long roleId) {
         Role role = roleMapper.selectByPrimaryKey(roleId);
-        return role != null && !role.getDeleted().equals(Role.DELETE);
+        return role != null && role.getDeleted().equals(Role.EXIST);
     }
 
     /**
@@ -62,7 +62,7 @@ public class RoleServiceImpl implements RoleService {
         }
         Role role = new Role();
         role.setId(roleId);
-        role.setDeleted(Role.DELETE);
+        role.setDeleted(System.currentTimeMillis());
         roleMapper.updateByPrimaryKeySelective(role);
         rolePermissionMapper.deleteRolePermissionsByRoleId(roleId);
     }
@@ -86,10 +86,7 @@ public class RoleServiceImpl implements RoleService {
      */
     @Override
     public Role findRole(Long roleId) {
-        Role role = roleMapper.selectByPrimaryKey(roleId);
-        List<Permission> permissions = permissionService.findPermissionsByRoleId(roleId);
-        role.setPermissions(permissions);
-        return role;
+        return roleMapper.findRoleById(roleId);
     }
 
     /**

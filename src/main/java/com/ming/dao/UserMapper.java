@@ -9,6 +9,10 @@ import java.util.List;
 
 @CacheNamespace//开启mybatis二级缓存
 public interface UserMapper extends Mapper<User> {
+
+    @Select("select * from user where id = #{userId} and deleted = 0")
+    User findUserById(Long userId);
+
     @Select("select * from user where deleted = 0")
     List<User> findAllUsers();
 }

@@ -1,6 +1,8 @@
 package com.ming;
 
+import com.ming.dao.RoleMapper;
 import com.ming.dao.UserMapper;
+import com.ming.pojo.Role;
 import com.ming.pojo.User;
 import com.ming.utils.JWTUtil;
 import org.junit.jupiter.api.Test;
@@ -13,6 +15,8 @@ class SpringBootPermissionApplicationTests {
 
     @Autowired
     UserMapper userMapper;
+    @Autowired
+    RoleMapper roleMapper;
     @Test
     void contextLoads() {
     }
@@ -88,4 +92,9 @@ class SpringBootPermissionApplicationTests {
 //            }
 //        }
 //    }
+    @Test
+    void testMybatisLazyLoad(){
+        Role role = roleMapper.findRoleById(1L);
+        role.getPermissions().forEach(System.out::println);
+    }
 }

@@ -17,7 +17,7 @@ public class Permission {
     /**
      * 标记已删除
      */
-    public static Short DELETE = 1;
+    public static Long EXIST = 0L;
 
     @Id
     @KeySql(dialect = IdentityDialect.MYSQL)
@@ -26,5 +26,5 @@ public class Permission {
     private String url;
     private String description;
     private String createTime;
-    private Short deleted;
+    private Long deleted;
 }
